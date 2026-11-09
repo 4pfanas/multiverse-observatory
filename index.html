@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multiverse Observatory: quantum computing, one measurement at a time</title>
+  <meta name="description" content="An interactive explainer of superposition, measurement and the many-worlds interpretation, built around a 14-qubit quantum circuit.">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" href="%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cg fill='none' stroke='%23FC4F00' stroke-width='1.4'%3E%3Cellipse cx='16' cy='16' rx='14' ry='5.4'/%3E%3Cellipse cx='16' cy='16' rx='14' ry='5.4' transform='rotate(60 16 16)'/%3E%3Cellipse cx='16' cy='16' rx='14' ry='5.4' transform='rotate(120 16 16)'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23FC4F00'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/stage.css">
+</head>
+<body>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<header class="topbar">
+  <a class="brand-lock" href="#premise" aria-label="Back to the top">
+    <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="#FC4F00" stroke-width="1.4"><ellipse cx="16" cy="16" rx="14" ry="5.4"/><ellipse cx="16" cy="16" rx="14" ry="5.4" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.4" transform="rotate(120 16 16)"/></g><circle cx="16" cy="16" r="2.6" fill="#FC4F00"/></svg>
+    <span class="brand-name">Multiverse Observatory</span>
+  </a>
+  <span class="topbar-here" id="hereLabel" aria-live="off">The premise</span>
+</header>
+
+<div class="shell"><div class="main">
+
+    <!-- ===== 01 premise ===== -->
+    <section class="section hero" id="premise" aria-labelledby="t-premise">
+      <div class="section-inner">
+        <p class="kicker">Status: observer standing by</p>
+        <h1 class="h1" id="t-premise">One future wins.<br>The rest still happen.</h1>
+        <p class="lede">A sorcerer scans 14,000,504 futures and finds exactly one where the heroes win. If every future is a real universe, what happened to the other 14,000,503? A small quantum computer can show you the shape of that problem.</p>
+
+        <p class="hint">Drag to turn the cloud. Click it to observe. Every dot is one of the 16,384 numbers 14 qubits can produce; the bright one is 1,473.</p>
+
+        <div class="panel" aria-live="polite">
+          <div class="panel-title"><span>register q0–q13 (14 qubits)</span><b id="heroState">superposition</b></div>
+          <div class="register" id="register" aria-label="14 qubit register"></div>
+          <div class="hero-actions">
+            <button class="btn is-solid" id="heroObserve">Observe the register</button>
+            <button class="btn" id="heroRelease">Release</button>
+            <span class="readout hero-state" id="heroReadout">value: undecided</span>
+          </div>
+          <p class="readout muted" style="margin:16px 0 0" id="heroTally">universes observed: 0 · winning universe (1,473): 0</p>
+        </div>
+
+        <div class="tiles" style="margin-top:32px">
+          <div class="tile"><div class="tile-value">14,000,504</div><div class="tile-label">futures the sorcerer checked</div></div>
+          <div class="tile"><div class="tile-value hl">1</div><div class="tile-label">future where the heroes win</div></div>
+          <div class="tile"><div class="tile-value">24 qubits</div><div class="tile-label">needed to hold that many outcomes at once</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 02 superposition ===== -->
+    <section class="section" id="superposition" aria-labelledby="t-super">
+      <div class="section-inner">
+        <p class="kicker">02 · Superposition</p>
+        <h2 class="h2" id="t-super">Not here or there. Everywhere, until you look.</h2>
+        <div class="copy">
+          <p>Picture someone crossing a street. Whether you watch or not, they have a position and a speed. An electron does not work that way. Until it is measured, the maths says its position is spread across every place it could be. That spread is a superposition.</p>
+          <p>A qubit is the smallest version: a thing that is 0 and 1 at once until it is measured.</p>
+        </div>
+
+        <div class="grid-2" style="margin-top:32px">
+          <div class="panel">
+            <div class="panel-title"><span>the electron on the street</span><b id="streetState">unobserved</b></div>
+            <div class="street" id="street" aria-label="16 possible positions"></div>
+            <div class="btn-row">
+              <button class="btn is-solid" id="streetObserve">Observe position</button>
+              <button class="btn" id="streetReset">Let it spread again</button>
+            </div>
+            <p class="readout muted" style="margin:16px 0 0" id="streetReadout">Before observation, it has no single position.</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title"><span>one qubit, measured many times</span><b>50 / 50</b></div>
+            <div class="bars" id="qubitBars" aria-label="Counts of 0 and 1"></div>
+            <div class="bar-labels"><span>0</span><span>1</span></div>
+            <div class="btn-row" style="margin-top:16px">
+              <button class="btn is-solid" id="qubitMeasure">Measure 1,000 times</button>
+              <button class="btn" id="qubitReset">Clear</button>
+            </div>
+            <p class="readout muted" style="margin:16px 0 0" id="qubitReadout">Each measurement is random. The pattern only shows up in bulk.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 measurement ===== -->
+    <section class="section" id="measurement" aria-labelledby="t-meas">
+      <div class="section-inner">
+        <p class="kicker">03 · Measurement</p>
+        <h2 class="h2" id="t-meas">Looking forces a single answer.</h2>
+        <div class="copy">
+          <p>Put three qubits in superposition and they represent eight values at once: 000 through 111. Measure them and you get exactly one. Measure again from scratch and you may get a different one. Nothing in the maths says which.</p>
+        </div>
+        <div class="panel" style="margin-top:32px">
+          <div class="panel-title"><span>three qubits, eight possible outcomes</span><b id="measCount">0 measurements</b></div>
+          <div class="bars" id="measBars" aria-label="Outcome counts for three qubits"></div>
+          <div class="bar-labels" id="measLabels"></div>
+          <div class="btn-row" style="margin-top:16px">
+            <button class="btn is-solid" id="measOne">Measure once</button>
+            <button class="btn" id="measHundred">Measure 100 times</button>
+            <button class="btn" id="measReset">Clear</button>
+          </div>
+          <p class="readout" style="margin:16px 0 0" id="measReadout">last result: none yet</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04 interpretations ===== -->
+    <section class="section" id="interpretations" aria-labelledby="t-interp">
+      <div class="section-inner">
+        <p class="kicker">04 · Two readings of the same maths</p>
+        <h2 class="h2" id="t-interp">What actually happens when you measure?</h2>
+        <div class="copy">
+          <p>The equations predict the results. They do not say what is going on underneath, so physicists have several interpretations. Two matter here. Switch between them and run the same spin measurement.</p>
+        </div>
+
+        <div class="seg" role="group" aria-label="Interpretation" style="margin-top:32px">
+          <button id="segCop" aria-pressed="true">Copenhagen</button>
+          <button id="segMany" aria-pressed="false">Many worlds</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title"><span id="interpTitle">Copenhagen: one outcome, the rest is gone</span><b id="interpState">before</b></div>
+          <div class="worlds" id="worlds"></div>
+          <div class="btn-row" style="margin-top:16px">
+            <button class="btn is-solid" id="interpMeasure">Measure the spin</button>
+            <button class="btn" id="interpReset">Reset</button>
+          </div>
+          <p class="copy" style="margin:16px 0 0" id="interpCopy"></p>
+        </div>
+
+        <div class="panel" style="margin-top:24px">
+          <div class="panel-title"><span>measure again and again: 3 spins, 8 worlds</span><b id="spinState">tap a world</b></div>
+          <div class="board" id="spinBoard"></div>
+          <p class="readout muted" style="margin:12px 0 0" id="spinNote"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 05 tree ===== -->
+    <section class="section" id="tree" aria-labelledby="t-tree">
+      <div class="section-inner">
+        <p class="kicker">05 · The branching tree</p>
+        <h2 class="h2" id="t-tree">Find the one winning branch.</h2>
+        <div class="copy">
+          <p>Four decisions means 2 × 2 × 2 × 2 = 16 possible futures, and one of them is the winning one. At each step you pick a side and half the remaining futures drop away. You cannot see which leaf wins until you reach the end.</p>
+          <p>The sorcerer's 14,000,504 futures would need a tree about 24 decisions deep, because 2<sup>24</sup> is the first power of two that covers them.</p>
+        </div>
+        <div class="panel" style="margin-top:32px">
+          <div class="panel-title"><span>Doctor Strange's choice</span><b id="stoneState">tap a world</b></div>
+          <div class="board" id="stoneBoard"></div>
+          <p class="readout muted" style="margin:12px 0 0" id="stoneNote"></p>
+        </div>
+        <div class="panel" style="margin-top:24px">
+          <div class="panel-title"><span>16 futures, one winner</span><b id="treeAttempts">attempt 1</b></div>
+          <div class="tree-leaves" id="leaves" aria-label="16 possible futures"></div>
+          <div class="path" id="treePath">Decision 1 of 4: choose a side.</div>
+          <div class="btn-row">
+            <button class="btn is-solid" id="treeLeft">Left branch</button>
+            <button class="btn is-solid" id="treeRight">Right branch</button>
+            <button class="btn" id="treePeek">Peek at the winner</button>
+            <button class="btn" id="treeNew">New tree</button>
+          </div>
+          <p class="readout muted" style="margin:16px 0 0" id="treeReadout">Odds of landing on the winner by guessing: 1 in 16.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 06 qubit lab ===== -->
+    <section class="section" id="qubit-lab" aria-labelledby="t-lab">
+      <div class="section-inner">
+        <p class="kicker">06 · Qubit lab</p>
+        <h2 class="h2" id="t-lab">Every qubit doubles the outcomes.</h2>
+        <div class="copy">
+          <p>n qubits in superposition cover 2<sup>n</sup> values at once. The growth is exponential: add one qubit and the count doubles. Drag the slider and watch where the article's machine and the sorcerer's multiverse sit.</p>
+        </div>
+        <div class="panel" style="margin-top:32px">
+          <div class="panel-title"><span>qubits in superposition</span><b id="labN">14</b></div>
+          <input class="range" id="labRange" type="range" min="1" max="30" value="14" aria-label="Number of qubits">
+          <div class="scale-wrap">
+            <div class="scale" id="labScale">
+              <div class="scale-fill" id="labFill"></div>
+              <div class="scale-mark" id="mark14"><span>14 qubits</span></div>
+              <div class="scale-mark" id="mark24"><span>24 qubits</span></div>
+            </div>
+          </div>
+          <div class="lab-out">
+            <div class="tile" style="border:1px solid #2D1104"><div class="tile-value hl" id="labOutcomes">16,384</div><div class="tile-label">outcomes held at once (2<sup>n</sup>)</div></div>
+            <div class="tile" style="border:1px solid #2D1104"><div class="tile-value" id="labCover">0.12%</div><div class="tile-label">of the sorcerer's 14,000,504 futures</div></div>
+            <div class="tile" style="border:1px solid #2D1104"><div class="tile-value" id="labVerdict">not enough</div><div class="tile-label" id="labNote">23 qubits give 8,388,608, still short.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 07 circuit ===== -->
+    <section class="section" id="circuit" aria-labelledby="t-circ">
+      <div class="section-inner">
+        <p class="kicker">07 · Circuit builder</p>
+        <h2 class="h2" id="t-circ">Build the 14-qubit circuit.</h2>
+        <div class="copy">
+          <p>A Hadamard gate (H) puts one qubit into an even superposition of 0 and 1. The article's circuit puts an H on all 14 wires, then measures every wire. Toggle the gates yourself.</p>
+          <p>The winning number is 1,473. Written in 14 bits, a wire with a <span class="hl">1</span> needs an H, or it can never come out as 1.</p>
+        </div>
+        <div class="grid-2" style="margin-top:32px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)">
+          <div class="circuit" id="circuitHost" role="group" aria-label="Quantum circuit with 14 wires"></div>
+          <div class="stack">
+            <div class="panel">
+              <div class="panel-title"><span>circuit readout</span></div>
+              <div class="readout stack">
+                <div>gates on: <b id="cH">14</b> of 14</div>
+                <div>possible outcomes: <b id="cOut">16,384</b></div>
+                <div>can output 1,473: <b id="cReach">yes</b></div>
+                <div>chance per shot: <b id="cProb">0.0061%</b></div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn is-solid" id="cAll">H on all wires</button>
+              <button class="btn" id="cNone">Clear all</button>
+              <button class="btn" id="cNeeded">Only the needed wires</button>
+            </div>
+            <p class="muted" style="font-size:15px;margin:0">"Only the needed wires" lands on 1,473 one time in 32, but it only works because we already know the answer. The real use of superposition is when you do not.</p>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:24px">
+          <div class="panel-title"><span>how one run flows through the circuit</span><b id="flowState">all wires on</b></div>
+          <div class="board" id="flowBoard" role="img" aria-label="Data-flow diagram: start state, wires with and without H gates, measurement, 14-bit output"></div>
+          <p class="readout muted" style="margin:12px 0 0" id="flowNote"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 08 experiment ===== -->
+    <section class="section" id="experiment" aria-labelledby="t-exp">
+      <div class="section-inner">
+        <p class="kicker">08 · Run the experiment</p>
+        <h2 class="h2" id="t-exp">How rarely does the winning world show up?</h2>
+        <div class="copy">
+          <p>This runs the all-H circuit in your browser. Each shot is one measurement, so one universe's worth of output in the many-worlds reading. A submission is 4,096 shots, the way the article sends jobs to the IBM machine. We count a win whenever a shot returns 1,473.</p>
+        </div>
+
+        <div class="grid-2" style="margin-top:32px">
+          <div class="panel">
+            <div class="panel-title"><span>controls</span><b id="expRunning">idle</b></div>
+            <div class="btn-row">
+              <button class="btn" id="expOne">1 shot</button>
+              <button class="btn is-solid" id="expSub">1 submission (4,096 shots)</button>
+              <button class="btn" id="expHundred">100 submissions</button>
+              <button class="btn" id="expReset">Reset</button>
+            </div>
+            <div class="hist readout stack">
+              <div>shots: <b id="eShots">0</b> · submissions: <b id="eSubs">0</b></div>
+              <div>other worlds: <b id="eOther">0</b></div>
+              <div>winning world (1,473): <b id="eWins">0</b></div>
+              <div>submissions with at least one win: <b id="eSubWins">0</b> <span class="muted" id="eRate"></span></div>
+            </div>
+            <div class="meter" aria-hidden="true"><div class="meter-fill" id="eMeter" style="width:0%"></div></div>
+            <div class="readout muted" style="font-size:12.5px">observed submission hit rate against the 22.1% expected</div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title"><span>latest outputs</span><b>newest at the bottom</b></div>
+            <div class="log" id="expLog" aria-live="off"></div>
+          </div>
+        </div>
+
+        <div class="tiles" style="margin-top:24px">
+          <div class="tile"><div class="tile-value">0.0061%</div><div class="tile-label">chance per shot on the 14-qubit machine (1 in 16,384)</div></div>
+          <div class="tile"><div class="tile-value">0.0000071%</div><div class="tile-label">chance per universe in a 14,000,504-world multiverse</div></div>
+          <div class="tile"><div class="tile-value hl">854.5×</div><div class="tile-label">per-shot advantage of the small machine</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 09 physics ===== -->
+    <section class="section" id="physics" aria-labelledby="t-phys">
+      <div class="section-inner">
+        <p class="kicker">09 · The real physics</p>
+        <h2 class="h2" id="t-phys">What the story simplifies.</h2>
+        <div class="copy">
+          <p>The multiverse framing is a good hook. These notes keep it honest.</p>
+        </div>
+        <div style="margin-top:32px">
+          <details class="detail" open>
+            <summary>A register does not store 16,384 usable numbers</summary>
+            <div class="detail-body">
+              <p>14 qubits in superposition carry 16,384 amplitudes, but a measurement returns only one 14-bit result. You cannot read the whole list back out. Useful quantum algorithms arrange the amplitudes so the answer you want becomes likely when you measure.</p>
+            </div>
+          </details>
+          <details class="detail">
+            <summary>Many worlds does not count universes to decide who wins</summary>
+            <div class="detail-body">
+              <p>"The heroes win in 1 of 14,000,504 worlds, so the villain wins nearly everywhere" treats every branch as equally weighted. In the many-worlds interpretation, branches carry amplitudes, and the Born rule links them to probabilities. Counting branches is a story device, not how the theory assigns likelihood.</p>
+            </div>
+          </details>
+          <details class="detail">
+            <summary>Why this circuit is just a random number generator</summary>
+            <div class="detail-body">
+              <p>H on every wire followed by measurement produces uniform random 14-bit numbers. That is useful for showing superposition and collapse, but it is not a quantum speed-up. Finding one marked number among 16,384 this way is the same as guessing.</p>
+            </div>
+          </details>
+          <details class="detail">
+            <summary>Copenhagen and many worlds make the same predictions</summary>
+            <div class="detail-body">
+              <p>Interpretations differ in what they say is real, not in what an experiment on this circuit will output. Your measurement histogram looks the same in both.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 10 sources ===== -->
+    <section class="section" id="sources" aria-labelledby="t-src">
+      <div class="section-inner">
+        <p class="kicker">10 · Sources and corrections</p>
+        <h2 class="h2" id="t-src">Where this comes from, and what we fixed.</h2>
+        <div class="copy">
+          <p>The idea and the circuit come from Dr. Alexis Kirke's Medium article, <a href="https://alexiskirke.medium.com/how-thanos-won-the-endgame-using-a-quantum-computer-to-simulate-dr-stranges-many-worlds-666528aeab16" target="_blank" rel="noopener">How Thanos Won the Endgame: Using a Quantum Computer to Simulate Dr. Strange's Many Worlds</a>. This site is an independent, original reworking with its own theme and interactives, not affiliated with the author or any studio. We rechecked every number in the article, and the figures on this site use the corrected values below.</p>
+        </div>
+
+        <div class="table-wrap" style="margin-top:32px">
+          <table class="table">
+            <thead><tr><th>Quantity</th><th>Article</th><th>This site</th><th>How it is worked out</th></tr></thead>
+            <tbody>
+              <tr><td>Per-shot advantage of the 14-qubit machine</td><td class="num was">846×</td><td class="num">854.5×</td><td>14,000,504 ÷ 16,384 = 854.52…</td></tr>
+              <tr><td>Expected winning observations per 4,096-shot submission, versus the 14,000,504-world multiverse</td><td class="num">≈ 3.5 million×</td><td class="num">3,500,126×</td><td>(14,000,504 ÷ 16,384) × 4,096 = 14,000,504 ÷ 4</td></tr>
+              <tr><td>Range of outputs from 14 qubits</td><td class="num was">1 to 16,384</td><td class="num">0 to 16,383</td><td>14 bits count from 00000000000000 to 11111111111111</td></tr>
+              <tr><td>Chance that a 4,096-shot submission contains at least one 1,473</td><td class="num">not given</td><td class="num">22.1%</td><td>1 − (1 − 1/16,384)<sup>4,096</sup></td></tr>
+              <tr><td>Who was born in 1473</td><td class="num was">Kepler</td><td class="num">Copernicus</td><td>Copernicus was born in 1473. Kepler was born in 1571.</td></tr>
+              <tr><td>Qubits needed for 14,000,504 outcomes</td><td class="num">24</td><td class="num">24</td><td>2<sup>23</sup> = 8,388,608 is too small; 2<sup>24</sup> = 16,777,216 fits.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">Multiverse Observatory · an interactive explainer by Anas Aslam · all simulations run in your browser</footer>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

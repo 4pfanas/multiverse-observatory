@@ -1,0 +1,51 @@
+/* Single-page layout over a fixed 3D stage. Loaded after style.css. */
+:root {
+  color-scheme: dark;
+  --stage-hot: #FFC9A8; --stage-dim: #C23E00;
+  --display: var(--font);
+  --prog: 0;
+}
+html { scroll-padding-top: 56px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 40; }
+#stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
+
+.shell { display: block; min-height: 0; position: relative; z-index: 1; }
+.main { position: relative; }
+
+.topbar {
+  display: flex; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; justify-content: space-between; align-items: center; gap: 16px;
+  background: var(--bg); border-bottom: 1px solid var(--line); height: 48px;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+}
+.topbar::after { content: ""; position: absolute; left: 0; bottom: -1px; height: 2px; width: calc(var(--prog) * 100%); background: var(--accent); }
+.brand-lock { display: flex; align-items: center; gap: 10px; color: var(--text); }
+.brand-lock:hover { text-decoration: none; }
+.topbar .brand-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; font-family: var(--display); }
+.topbar-here { font-family: var(--mono); font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+.section {
+  padding: 88px max(clamp(16px, 4.5vw, 56px), env(safe-area-inset-right, 0px)) 88px max(clamp(16px, 4.5vw, 56px), env(safe-area-inset-left, 0px));
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 80%, transparent) 0%, color-mix(in srgb, var(--bg) 46%, transparent) 62%, transparent 82%);
+}
+.hero { min-height: calc(100vh - 48px); padding-top: 64px; display: flex; align-items: center; background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 70%, transparent) 0%, transparent 62%); }
+.hero .section-inner { width: 100%; }
+.hero .lede, .hero .hint { max-width: 560px; }
+.hint { font-family: var(--mono); font-size: 13px; color: var(--muted); margin: 0 0 var(--s6); line-height: 1.55; }
+.hero .panel { max-width: 640px; }
+.hero { cursor: grab; }
+.hero .panel, .hero .tiles, .hero button, .hero a { cursor: auto; }
+.hero button { cursor: pointer; }
+.tiles { max-width: 640px; }
+.h1 { font-family: var(--display); text-shadow: 0 2px 40px var(--bg); }
+
+.panel { background: color-mix(in srgb, var(--surface) 84%, transparent); transition: transform .18s ease-out, border-color .2s; transform-style: preserve-3d; will-change: transform; }
+.panel:hover { border-color: var(--line-strong); }
+.foot { position: relative; background: var(--bg); padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+@media (max-width: 860px) {
+  .section { padding: 56px max(16px, env(safe-area-inset-right, 0px)) 56px max(16px, env(safe-area-inset-left, 0px)); background: color-mix(in srgb, var(--bg) 78%, transparent); }
+  .hero { min-height: 0; padding-top: 40px; background: color-mix(in srgb, var(--bg) 40%, transparent); }
+  .topbar-here { max-width: 46vw; }
+}
+@media (prefers-reduced-motion: reduce) { .panel { transform: none !important; } }
